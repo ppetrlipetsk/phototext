@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="imageEngine" class="com.ppsdevelopment.imagelib.ImageEngine">
+        <constructor-arg value="c:\files"/>
+    </bean>
+
+    <bean id="filesPathReader" class="com.ppsdevelopment.FilesPathReader">
+        <constructor-arg value="c:\files\images"/>
+    </bean>
+
+    <bean id="importProcessor" class="com.ppsdevelopment.ImportProcessor">
+        <constructor-arg value="c://files/1.xlsx"/>
+    </bean>
+
+    <bean id="filesPathReader" class="com.ppsdevelopment.FilesPathReader">
+        <constructor-arg value="c:/files/photo"/>
+    </bean>
+
+</beans>
