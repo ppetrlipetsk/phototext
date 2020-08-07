@@ -1,5 +1,7 @@
 package com.ppsdevelopment.imagelib;
 
+import com.ppsdevelopment.IFilesPathReader;
+import com.ppsdevelopment.IImportProcessor;
 import com.ppsdevelopment.TableCollection;
 
 import java.util.Map;
@@ -14,6 +16,17 @@ public class ImageEngine implements IImageEngine{
     private   int fontLineHeightRatio;
     private String sourcePath;
     private String destinationPath;
+    private IFilesPathReader filesPathReader;
+    private IImportProcessor importProcessor;
+
+
+    public void setImportProcessor(IImportProcessor importProcessor) {
+        this.importProcessor = importProcessor;
+    }
+
+    public void setFilesPathReader(IFilesPathReader filesPathReader) {
+        this.filesPathReader = filesPathReader;
+    }
 
     public void setSourcePath(String sourcePath) {
         this.sourcePath = sourcePath;
@@ -65,6 +78,11 @@ public class ImageEngine implements IImageEngine{
     }
 
     public void process(){
+        filesPathReader.fillFilesCollection();
+        this.setPhotoFilesCollection(filesPathReader.getFilesCollection());
+        importProcessor.loadTable();
+        items=importProcessor.getItems();
+
         indexItems();
         for (Map.Entry entry: items.entrySet()) {
             int key= (int) entry.getKey();

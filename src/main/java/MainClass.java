@@ -1,42 +1,45 @@
-import com.ppsdevelopment.*;
 import com.ppsdevelopment.imagelib.IImageEngine;
 import com.ppsdevelopment.imagelib.ImageEngine;
-import com.ppsdevelopment.imagelib.ImageTexter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import java.util.Map;
+import java.io.File;
 
 public class MainClass {
     public static void main(String[] args) {
+        String contextPath="applicationcontext.xml";
 
-//            ImportProcessor processor=new ImportProcessor("c://files/1.xlsx");
-//            processor.loadTable();
+        if (args.length>0) contextPath=args[0];
+        File file=new File(contextPath);
+        if (!file.exists()) {
+            System.out.println("Ошибка загрузки файла контекста!");
+            System.exit(1);
+        }
 
-            ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("applicationcontext.xml");
+        System.out.println("Starting application...");
+        try {
 
-            IImportProcessor importProcessor=context.getBean("importProcessor",ImportProcessor.class);
-            importProcessor.loadTable();
-            Map<Integer, TableCollection> items=importProcessor.getItems();
-
-            FilesPathReader filesPathReader=context.getBean("filesPathReader",FilesPathReader.class);
-            String[] files=filesPathReader.getFilesCollection();
+            //ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("c:/applicationcontext.xml");
+            FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(contextPath);
 
 
-            IImageEngine imageEngine=context.getBean("imageEngine", ImageEngine.class);
-            imageEngine.setPhotoFilesCollection(files);
-            imageEngine.setInfoTable(items);
-            imageEngine.process();
+//            IImportProcessor importProcessor=context.getBean("importProcessor",ImportProcessor.class);
+//            importProcessor.loadTable();
+//            Map<Integer, TableCollection> items=importProcessor.getItems();
 
-//            IFilesPathReader filesPathReader=context.getBean("filesPathReader", FilesPathReader.class);
+//            FilesPathReader filesPathReader=context.getBean("filesPathReader",FilesPathReader.class);
 //            String[] files=filesPathReader.getFilesCollection();
 
-//            System.out.println(imageEngine.getFileName());
+            IImageEngine imageEngine = context.getBean("imageEngine", ImageEngine.class);
+            //imageEngine.setPhotoFilesCollection(files);
+//            imageEngine.setInfoTable(items);
+            imageEngine.process();
             context.close();
-  //          String caption="Чтобы узнать, есть в массиве какой-либо элемент, можно воспользоваться методом contains(), который вернёт логическое значение true или false в зависимости от присутствия элемента в наборе";
-            //Соотношение высоты шрифта к высоте экрана
-            int fontLineHeightRatio=5;
-////            ImageTexter texter=new ImageTexter("c://files/1.jpg",caption, 2/3f,1/20.0,10,0, fontLineHeightRatio, this.destinationPath);
-//            texter.draw();
+        }
+        catch (Exception e){
+            System.out.println("Ошибка приложения. Сообщение об ошибке:"+e.toString());
+        }
    }
 
 }

@@ -7,13 +7,14 @@ import java.util.TreeSet;
 
 public class FilesPathReader implements IFilesPathReader {
     private final String path;
+    private String[] filesCollection;
 
     public FilesPathReader(String path) {
         this.path = path;
     }
 
     @Override
-    public String[] getFilesCollection(){
+    public void fillFilesCollection(){
         final Set<String> items=new TreeSet<>(new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
@@ -26,7 +27,12 @@ public class FilesPathReader implements IFilesPathReader {
             for(File item : dir.listFiles()) {
                 items.add(item.getName());
             }
-        return items.toArray(new String[items.size()]);
+
+        this.filesCollection= items.toArray(new String[items.size()]);
     }
 
+    @Override
+    public String[] getFilesCollection() {
+        return filesCollection;
+    }
 }
