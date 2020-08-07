@@ -26,7 +26,7 @@ public class FilesPathReader implements IFilesPathReader {
             for(File item : dir.listFiles()) {
                 items.add(item.getName());
             }
-        return (String[])items.toArray();
+        return items.toArray(new String[items.size()]);
     }
 
 }

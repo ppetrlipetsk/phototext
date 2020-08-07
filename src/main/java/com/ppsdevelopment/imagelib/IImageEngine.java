@@ -10,4 +10,6 @@ public interface IImageEngine {
     void setPhotoFilesCollection(String[] files);
 
     void setInfoTable(Map<Integer, TableCollection> items);
+
+    void process();
 }

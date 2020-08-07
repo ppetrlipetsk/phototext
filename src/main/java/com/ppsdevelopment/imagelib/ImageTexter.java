@@ -3,7 +3,6 @@ package com.ppsdevelopment.imagelib;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +19,10 @@ public class ImageTexter {
     private final int dx;
     private final int dy;
     private final int fontLineHeightRatio;
+    private String destinationPath;
+    private String sourcePath;
 
-    public ImageTexter(String fileName, String caption, double ratioWidth, double ratioHeight, int dx, int dy, int fontLineHeightRatio) {
+    public ImageTexter(String fileName, String caption, double ratioWidth, double ratioHeight, int dx, int dy, int fontLineHeightRatio, String destinationPath, String sourcePath) {
         this.fileName = fileName;
         this.caption = caption;
         font=new Font("Times New Roman", Font.PLAIN, 150);
@@ -30,11 +31,13 @@ public class ImageTexter {
         this.dx=dx;
         this.dy=dy;
         this.fontLineHeightRatio = fontLineHeightRatio;
+        this.destinationPath=destinationPath;
+        this.sourcePath=sourcePath;
     }
 
     private BufferedImage loadImage() throws IOException {
         final BufferedImage image;
-        image = ImageIO.read(new File(fileName));
+        image = ImageIO.read(new File(sourcePath+fileName));
         return image;
     }
 
@@ -68,7 +71,7 @@ public class ImageTexter {
             textOut(captionLines,dx,screenHeight-dy-height);
             graphics.dispose();
 
-            ImageIO.write(image, "jpg", new File("test.jpg"));
+            ImageIO.write(image, "jpg", new File(destinationPath+fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }

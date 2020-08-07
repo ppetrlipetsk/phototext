@@ -8,11 +8,14 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
     <bean id="imageEngine" class="com.ppsdevelopment.imagelib.ImageEngine">
-        <constructor-arg value="c:\files"/>
-    </bean>
 
-    <bean id="filesPathReader" class="com.ppsdevelopment.FilesPathReader">
-        <constructor-arg value="c:\files\images"/>
+        <property name="dx" value="10" />
+        <property name="dy" value="0" />
+        <property name="withRatio" value="0.67" />
+        <property name="heightRatio" value="0.1" />
+        <property name="fontLineHeightRatio" value="5" />
+        <property name="sourcePath" value="c://files//pict//"/>
+        <property name="destinationPath" value="c://files//pict_text//"/>
     </bean>
 
     <bean id="importProcessor" class="com.ppsdevelopment.ImportProcessor">
@@ -20,7 +23,7 @@
     </bean>
 
     <bean id="filesPathReader" class="com.ppsdevelopment.FilesPathReader">
-        <constructor-arg value="c:/files/photo"/>
+        <constructor-arg value="c:/files/pict"/>
     </bean>
 
 </beans>
