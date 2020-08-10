@@ -1,6 +1,5 @@
 com\ppsdevelopment\imagelib\ImageEngine.class
 com\ppsdevelopment\imagelib\ImageTexter.class
-com\ppsdevelopment\ImportProcessor$1.class
 com\ppsdevelopment\TableCollection.class
 com\ppsdevelopment\ImportProcessor.class
 com\ppsdevelopment\ExcelReader$SheetToFields.class

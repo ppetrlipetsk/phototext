@@ -1,15 +1,15 @@
 package com.ppsdevelopment.imagelib;
 
-import com.ppsdevelopment.TableCollection;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.ppsdevelopment.IFilesPathReader;
 
 public interface IImageEngine {
 
     void setPhotoFilesCollection(String[] files);
 
-    void setInfoTable(Map<Integer, TableCollection> items);
+    void process() throws Exception;
 
-    void process();
+    IFilesPathReader getFilesPathReader();
+
+    String getDestinationPath();
 }

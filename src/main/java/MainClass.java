@@ -1,10 +1,11 @@
 import com.ppsdevelopment.imagelib.IImageEngine;
 import com.ppsdevelopment.imagelib.ImageEngine;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MainClass {
     public static void main(String[] args) {
@@ -19,21 +20,15 @@ public class MainClass {
 
         System.out.println("Starting application...");
         try {
-
-            //ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("c:/applicationcontext.xml");
             FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(contextPath);
-
-
-//            IImportProcessor importProcessor=context.getBean("importProcessor",ImportProcessor.class);
-//            importProcessor.loadTable();
-//            Map<Integer, TableCollection> items=importProcessor.getItems();
-
-//            FilesPathReader filesPathReader=context.getBean("filesPathReader",FilesPathReader.class);
-//            String[] files=filesPathReader.getFilesCollection();
-
             IImageEngine imageEngine = context.getBean("imageEngine", ImageEngine.class);
-            //imageEngine.setPhotoFilesCollection(files);
-//            imageEngine.setInfoTable(items);
+
+            if (imageEngine.getDestinationPath().equals(imageEngine.getFilesPathReader().getPath()))
+               throw new Exception("Путь к папке изображений совпадает с путем к папке вывода. ");
+
+            checkPath(imageEngine.getDestinationPath(),"Неправильно задан путь к папке с обработанными изображениями");
+            checkPath(imageEngine.getFilesPathReader().getPath(),"Неправильно задан путь к папке с изображениями");
+
             imageEngine.process();
             context.close();
         }
@@ -41,5 +36,12 @@ public class MainClass {
             System.out.println("Ошибка приложения. Сообщение об ошибке:"+e.toString());
         }
    }
+
+    private static void checkPath(String pathString,String message) throws Exception {
+        Path path = Paths.get(pathString);
+        if (!Files.exists(path)) {
+            throw new Exception(message);
+        }
+    }
 
 }

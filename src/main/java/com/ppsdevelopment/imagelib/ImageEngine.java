@@ -13,13 +13,17 @@ public class ImageEngine implements IImageEngine{
     private   double heightRatio;
     private   int dx;
     private   int dy;
-    private   int fontLineHeightRatio;
-    private String sourcePath;
+    private   double fontLineHeightRatio;
+//    private String sourcePath;
     private String destinationPath;
+ //   private String xlsxPath;
     private IFilesPathReader filesPathReader;
     private IImportProcessor importProcessor;
 
-
+    /*public void setXlsxPath(String xlsxPath) {
+        this.xlsxPath = xlsxPath;
+    }
+*/
     public void setImportProcessor(IImportProcessor importProcessor) {
         this.importProcessor = importProcessor;
     }
@@ -28,8 +32,13 @@ public class ImageEngine implements IImageEngine{
         this.filesPathReader = filesPathReader;
     }
 
-    public void setSourcePath(String sourcePath) {
-        this.sourcePath = sourcePath;
+    //public void setSourcePath(String sourcePath) {
+//        this.sourcePath = sourcePath;
+//    }
+
+
+    public IFilesPathReader getFilesPathReader() {
+        return filesPathReader;
     }
 
     public void setDestinationPath(String destinationPath) {
@@ -52,34 +61,42 @@ public class ImageEngine implements IImageEngine{
         this.dy = dy;
     }
 
-    public void setFontLineHeightRatio(int fontLineHeightRatio) {
+    public void setFontLineHeightRatio(double fontLineHeightRatio) {
         this.fontLineHeightRatio = fontLineHeightRatio;
     }
 
     public ImageEngine() {
     }
-/*
-    public ImageEngine(double withRatio, double heightRatio, int dx, int dy, int fontLineHeightRatio) {
-        this.withRatio = withRatio;
-        this.heightRatio = heightRatio;
-        this.dx = dx;
-        this.dy = dy;
-        this.fontLineHeightRatio = fontLineHeightRatio;
-    }*/
+
+//    @Override
+//    public String getSourcePath() {
+//        return sourcePath;
+//    }
+
+    @Override
+    public String getDestinationPath() {
+        return destinationPath;
+    }
 
     @Override
     public void setPhotoFilesCollection(String[] files) {
         this.files=files;
     }
 
-    @Override
-    public void setInfoTable(Map<Integer, TableCollection> items) {
-        this.items=items;
-    }
+//    @Override
+//    public void setInfoTable(Map<Integer, TableCollection> items) {
+//        this.items=items;
+//    }
 
-    public void process(){
+//    @Override
+//    public void setInfoTable(Map<Integer, TableCollection> items) {
+//        this.items=items;
+//    }
+
+    public void process() throws Exception {
         filesPathReader.fillFilesCollection();
         this.setPhotoFilesCollection(filesPathReader.getFilesCollection());
+        //importProcessor.setXLSXFilePath(this.xlsxPath);
         importProcessor.loadTable();
         items=importProcessor.getItems();
 
@@ -105,28 +122,29 @@ public class ImageEngine implements IImageEngine{
                     dx,
                     dy,
                     fontLineHeightRatio,
-                    this.destinationPath,this.sourcePath)
+                    this.destinationPath,this.filesPathReader.getPath())
             ).draw();
             System.out.println("Обработана запись id="+key+" файл № "+(i+1)+" имя файла "+fileName);
         }
     }
 
-    private void indexItems() {
-        TableCollection tcPred=null;
-        TableCollection tableCollection=null;
-        for (Map.Entry entry: items.entrySet()) {
-            int key= (int) entry.getKey();
-            tableCollection= (TableCollection) entry.getValue();
-            if (tcPred==null){
-                tcPred=tableCollection;
+    private void indexItems() throws Exception {
+        TableCollection tcPred = null;
+        TableCollection tableCollection;
+        for (Map.Entry entry : items.entrySet()) {
+            tableCollection = (TableCollection) entry.getValue();
+            if (tcPred == null) {
+                tcPred = tableCollection;
+            } else {
+                tcPred.setCount(tableCollection.getIndex() - tcPred.getIndex());
+                tcPred = tableCollection;
             }
-            else
-            {
-                tcPred.setCount(tableCollection.getIndex()-tcPred.getIndex());
-                tcPred=tableCollection;
-            }
+
+            if (tableCollection != null) {
+                tableCollection.setCount(this.files.length - tableCollection.getIndex());
+            } else
+                throw new Exception("Ошибка данных в таблице XLSX");
         }
-        tableCollection.setCount(this.files.length-tableCollection.getIndex());
     }
 
 }

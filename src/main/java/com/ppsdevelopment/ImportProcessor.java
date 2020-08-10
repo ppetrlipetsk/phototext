@@ -9,27 +9,30 @@ import java.util.*;
 public class ImportProcessor implements IImportProcessor {
     private static final int FIELDSCOUNT = 3;
     private final Map<Integer, TableCollection> items;
-    private final String fileName;
+    private String filePath;
 
-    public ImportProcessor(String fileName) {
-        items=new TreeMap<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                if (o1>o2) return 1;
-                else
-                    if (o1<o2)
-                    return -1;
-                    else
-                        return 0;
-            }
-        });
-        this.fileName=fileName;
+    public ImportProcessor() {
+        items=new TreeMap<>(Integer::compareTo);
     }
+
+//    public ImportProcessor(String fileName) {
+//        this();
+//        this.filePath =fileName;
+//    }
+
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+//    public void setXLSXFilePath(String fileName) {
+//        this.filePath = fileName;
+//    }
 
     @Override
     public void loadTable() {
         DataImportCallBack fcb = new DataImportCallBack();
-        ExcelReader ereader = new ExcelReader(fileName, fcb, this.FIELDSCOUNT);
+        ExcelReader ereader = new ExcelReader(filePath, fcb, FIELDSCOUNT);
         try {
             ereader.read();
         } catch (IOException | SAXException | OpenXML4JException e) {
@@ -45,9 +48,9 @@ public class ImportProcessor implements IImportProcessor {
 
     private void lineImporter(LinkedList<String> list, long currentRow) {
         if (currentRow>0){
-            int indx=Integer.valueOf(list.get(0));
-            String caption= list.get(2);
-            String loc=list.get(1);
+            int indx=Integer.parseInt(list.get(0));
+            String caption= list.get(1);
+            String loc=null;//list.get(2);
             TableCollection tc=new TableCollection(caption,indx,loc);
             items.put(indx,tc);
         }
@@ -69,7 +72,6 @@ public class ImportProcessor implements IImportProcessor {
     private DataImportCallBack() {
         this.currentRow=-1;
     }
-
 }
 
 }

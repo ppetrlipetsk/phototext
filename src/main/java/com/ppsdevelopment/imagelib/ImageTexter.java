@@ -18,11 +18,11 @@ public class ImageTexter {
     private  final  double ratioHeight;
     private final int dx;
     private final int dy;
-    private final int fontLineHeightRatio;
-    private String destinationPath;
-    private String sourcePath;
+    private final double fontLineHeightRatio;
+    private final String destinationPath;
+    private final String sourcePath;
 
-    public ImageTexter(String fileName, String caption, double ratioWidth, double ratioHeight, int dx, int dy, int fontLineHeightRatio, String destinationPath, String sourcePath) {
+    public ImageTexter(String fileName, String caption, double ratioWidth, double ratioHeight, int dx, int dy, double fontLineHeightRatio, String destinationPath, String sourcePath) {
         this.fileName = fileName;
         this.caption = caption;
         font=new Font("Times New Roman", Font.PLAIN, 150);
@@ -56,7 +56,7 @@ public class ImageTexter {
             int maxCaptionHeight=(int)Math.round(ratioHeight*screenHeight);
 
             //Определяем начальную высоту шрифта
-            int maxFontSize=screenHeight/fontLineHeightRatio;
+            int maxFontSize=(int) Math.round(screenHeight*fontLineHeightRatio);
             detectFontSize(maxFontSize);
 
             //Определяем высоту области вывода
@@ -128,9 +128,9 @@ public class ImageTexter {
 
     private void textOut(String[] caption,int dx, int dy) {
         int dh=dy;
-        for(int i=0;i<caption.length;i++) {
-            graphics.drawString(caption[i], dx, dh);
-            dh+=getLineHeight(caption[i]);
+        for (String s : caption) {
+            graphics.drawString(s, dx, dh);
+            dh += getLineHeight(s);
         }
     }
 
@@ -138,26 +138,26 @@ public class ImageTexter {
         ArrayList<String> list=new ArrayList<>();
         String[] words=caption.split(" ");
         FontMetrics fm = graphics.getFontMetrics();
-        String s="";
-        for(int i=0;i<words.length;i++){
-            String s1=s+" "+words[i];
+        StringBuilder s= new StringBuilder();
+        for(String word:words){
+            String s1=s+" "+word;
             int width = fm.stringWidth(s1);
             if (width>maxCaptionLength){
-                list.add(s);
-                s=words[i];
+                list.add(s == null ? null : s.toString());
+                s = word == null ? null : new StringBuilder(word);
             }
             else
-                s=s+" "+words[i];
+                s = (s == null ? new StringBuilder("null") : s).append(" ").append(word);
         }
-        list.add(s);
-        return list.toArray(new String[list.size()]);
+        list.add(s == null ? null : s.toString());
+        return list.toArray(new String[0]);
     }
 
 
-    private int getCaptionHeight(String[] caption){
+    private int getCaptionHeight(String[] captions){
         int h=0;
-        for(int i=0;i<caption.length;i++){
-            h+=getLineHeight(caption[i]);
+        for(String caption:captions){
+            h+=getLineHeight(caption);
         }
         return h;
     }
